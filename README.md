@@ -4,6 +4,8 @@ Barcodes are boring, there's no doubt about that.
 
 Barsy makes them better.
 
+Check out a quick video demo [here](http://f.cl.ly/items/2i2f3g3T0Y1O1S3f1t0h/Untitled.mov) (or clone and check out the example.html file).
+
 # Usage
 
     $('.class').barsy({
