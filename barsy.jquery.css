@@ -1,0 +1,22 @@
+.barsy {
+    float:left;
+    clear:both;
+    padding: 0 10px; /*quiet zone*/
+    overflow: visible;
+    height: 150px; /*size*/
+}
+.barsy + * { clear:both; }
+.barsy div {
+    float:left;
+    height: inherit; /*size*/
+    position: relative;
+}
+.barsy .bar1 { border-left:2px solid black; }
+.barsy .bar2 { border-left:4px solid black; }
+.barsy .bar3 { border-left:6px solid black; }
+.barsy .bar4 { border-left:8px solid black; }
+.barsy .space0 { margin-right:0 }
+.barsy .space1 { margin-right:2px }
+.barsy .space2 { margin-right:4px }
+.barsy .space3 { margin-right:6px }
+.barsy .space4 { margin-right:8px }
