@@ -118,7 +118,7 @@
 
         if (opts.height) $this.css('height', opts.height);
 
-        animate($this.empty().append(code128(value, opts)), opts);
+        animate($this.empty().addClass('barsy').append(code128(value, opts)), opts);
     };
 
 })(jQuery);
