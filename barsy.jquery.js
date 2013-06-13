@@ -32,8 +32,6 @@
                 if (opts.color === 'rainbow') color = RAINBOW[i % RAINBOW.length];
                 else color = opts.color;
 
-                console.log(color);
-
                 b += 'style="border-color:' + color + ';"></div>';
             }
             else b += '></div>';
