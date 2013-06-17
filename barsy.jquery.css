@@ -10,6 +10,7 @@
     float:left;
     height: inherit; /*size*/
     position: relative;
+    height: 0;
 }
 .barsy .bar1 { border-left:2px solid black; }
 .barsy .bar2 { border-left:4px solid black; }

@@ -82,27 +82,31 @@
     };
 
     function animate($barsy, opts) {
-        $barsy.children().each(function() {
-            barAnimate($(this), $.extend({}, opts));
-        });
+        var children = $barsy.children(),
+            l = children.length;
+
+        for (var i = 0; i < l; i++) {
+            barAnimate(children.eq(i), $.extend({}, opts));
+        }
     }
 
     function barAnimate($bar, opts) {
-        opts.speed = opts.speed || 1000;
-        opts.distance = (opts.distance && opts.distance < 0.5) ? opts.distance : 0.3;
+        var aniOptions = {};
 
-        if (!opts.random) opts.random = Math.random();
+        // initialize values when random isn't there
+        if (!opts.random) {
+            opts.random = Math.random();
+            opts.reverse = opts.random < 0.7 ? true : false;
+            opts.d = (opts.random * (opts.distance - 0.2) + 0.2) * parseInt(150, 10);
+            opts.s = (opts.random * (1 - 0.5) + 0.5) * opts.speed;
+            aniOptions['height'] = opts.height;
+        }
 
-        var distance = opts.random * opts.distance * 150,
-            speed = opts.random * opts.speed;
-
-        if (opts.reverse) distance = -distance;
+        aniOptions['top'] = opts.reverse ? -opts.d : opts.d;
 
         $bar.animate(
-            {
-                top: distance
-            },
-            speed,
+            aniOptions,
+            opts.s,
             function() {
                 opts.reverse = !opts.reverse;
                 barAnimate($bar, opts);
@@ -116,7 +120,11 @@
         var $this = $(this),
             value = opts.value || $this.text();
 
-        if (opts.height) $this.css('height', opts.height);
+        opts.height = opts.height || 150;
+        opts.speed = opts.speed || 1000;
+        opts.distance = (opts.distance && opts.distance < 0.5) ? opts.distance : 0.3;
+
+        $this.css('height', opts.height);
 
         animate($this.empty().addClass('barsy').append(code128(value, opts)), opts);
     };
