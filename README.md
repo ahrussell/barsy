@@ -8,7 +8,7 @@ Check out a quick video demo [here](http://f.cl.ly/items/2i2f3g3T0Y1O1S3f1t0h/Un
 
 This version of barsy is done using CSS3 animations via the Move.js library, rather than JavaScript animations via jQuery.
 
-This version also adds stop and restart methods.  In the example, clicking the barcode will start/stop it.
+This version also adds stop and restart methods.  In the example, clicking the barcode will start/stop it.  You can supply a callback function to stop or restart to call upon finishing.
 
 # Usage
 
@@ -23,5 +23,5 @@ This version also adds stop and restart methods.  In the example, clicking the b
     // to stop the animation, call stop
     barsy.stop();
 
-    // to restart the animation, call start
+    // to restart the animation, call restart
     barsy.restart();
