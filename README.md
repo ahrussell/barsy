@@ -23,5 +23,12 @@ This version also adds stop and restart methods.  In the example, clicking the b
     // to stop the animation, call stop
     barsy.stop();
 
+    // or supply a callback function
+    barsy.stop(function (shout, out) { console.log(shout + out) }, "now ", "stopping");
+
     // to restart the animation, call restart
     barsy.restart();
+
+    // or supply a callback function
+    barsy.stop(function (shout, out) { console.log(shout + out) }, "now", "restarting");
+
