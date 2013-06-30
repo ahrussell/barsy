@@ -8,7 +8,7 @@
 .barsy + * { clear:both; }
 .barsy div {
     float:left;
-    height: inherit; /*size*/
+    height: inherit;
     position: relative;
     height: 0;
 }

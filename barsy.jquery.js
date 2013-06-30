@@ -8,6 +8,7 @@
     http://zanstra.com/my/Barcode.html
     http://www.opensource.org/licenses/mit-license.php
 */
+
 (function($) {
     if (!exports) var exports = window;
     var BARS = [212222,222122,222221,121223,121322,131222,122213,122312,132212,221213,221312,231212,112232,122132,122231,113222,123122,123221,223211,221132,221231,213212,223112,312131,311222,321122,321221,312212,322112,322211,212123,212321,232121,111323,131123,131321,112313,132113,132311,211313,231113,231311,112133,112331,132131,113123,113321,133121,313121,211331,231131,213113,213311,213131,311123,311321,331121,312113,312311,332111,314111,221411,431111,111224,111422,121124,121421,141122,141221,112214,112412,122114,122411,142112,142211,241211,221114,413111,241112,134111,111242,121142,121241,114212,124112,124211,411212,421112,421211,212141,214121,412121,111143,111341,131141,114113,114311,411113,411311,113141,114131,311141,411131,211412,211214,211232,23311120],
@@ -16,6 +17,8 @@
         HEIGHT = 150,
         RAINBOW = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#8F00FF'];
 
+    var animations = [];
+    var max_animation_length = 0;
 
     function code128(code, opts) {
         barcodeType = code128Detect(code);
@@ -102,19 +105,111 @@
             aniOptions['height'] = opts.height;
         }
 
+        max_animation_length = Math.max(max_animation_length, opts.s);
+
         aniOptions['top'] = opts.reverse ? -opts.d : opts.d;
 
-        $bar.animate(
-            aniOptions,
-            opts.s,
-            function() {
-                opts.reverse = !opts.reverse;
-                barAnimate($bar, opts);
-            }
-        );
+        $bar.css("height", 1);
+        $bar.css("opacity", 0);
+
+        animations.push([window.setInterval(function () {
+                var moveBack = move($bar).y(0).duration(opts.s).end();
+                var distance = opts.d*2;
+
+                if(!opts.started) {
+                    $bar.css("opacity", 1);
+
+                    move($bar).set("height",opts.height).duration(opts.s).y(distance).end();
+                    move($bar).set("height",opts.height).duration(opts.s).y(distance).ease("in-out").then(moveBack).end();
+
+                    opts.started = true;
+                } else {
+                    move($bar).set("height",opts.height).duration(opts.s).y(distance).ease("in-out").then(moveBack).end();
+                }
+            }, opts.s*2), $bar, opts]);
+
     }
+    
 
     $.fn.barsy = function(opts) {
+
+        this.finished = false;
+
+        this.stop = function() {
+            if (!this.finished) {
+                window.setTimeout(function () {
+                        var i = 0;
+
+                        var finish = function () { 
+                                if (i < animations.length-1) {
+                                    var bar = animations[++i][1];
+
+                                    move(bar).set("border-right", bar.css("margin-right")+" solid "+bar.css("border-left-color"))
+                                        .set("margin-right", "0px").duration(5).then(finish).end();
+                                } else {
+                                    this.finished = true;
+                                }
+                            };
+
+                        var bar = animations[0][1];
+
+                        move(bar)
+                            .set("border-right", bar.css("margin-right")+" solid "+bar.css("border-left-color"))
+                            .set("margin-right", "0px").duration(5).then(finish).end();
+
+                        move($(".barsy")).set("background-color", animations[0][1].css("border-left-color")).duration(1000).end();
+
+                    }, max_animation_length / 1.5);
+
+                for (var i = 0; i < animations.length; i++) {
+                        clearInterval(animations[i][0]);
+
+                        var bar = animations[i][1];
+
+                        move(bar).y(0).duration(500).end();
+                }
+            } 
+        };
+
+        this.restart = function() {
+            if (!this.finished) {
+                window.setTimeout(function () {                        
+
+                        var bars = [];
+                        var opts = [];
+                        for (var i = 0; i < animations.length; i++) {
+                            animations[i][1].css("margin-right", animations[i][1].css("border-right-width")).css("border-right", "");
+
+                            animations[i][1].css("opacity", 0);
+
+                            bars.push(animations[i][1]);
+                            opts.push(animations[i][2]);
+                        }
+
+                        animations = [];
+
+                        for (var i = 0; i < bars.length; i++) {
+                            console.log(i);
+                            opts[i].started = false;
+
+                            barAnimate(bars[i], opts[i]);
+                        }
+
+                        this.finished = false;
+
+
+                        move($(".barsy")).set("background-color", "#FFF").duration(1000).end();
+
+                    }, max_animation_length / 1.5);
+
+            } 
+        };
+
+        move.select = function(element) {
+            return element.get(0);
+        };
+
+
         opts = opts || {};
 
         var $this = $(this),
@@ -127,6 +222,8 @@
         $this.css('height', opts.height);
 
         animate($this.empty().addClass('barsy').append(code128(value, opts)), opts);
+        
+        return this;
     };
 
 })(jQuery);

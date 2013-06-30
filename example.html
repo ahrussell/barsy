@@ -12,18 +12,22 @@
 </head>
 <body>
     <div class='container'>
-        <div class='barsy'></div>
+        <div class='barsy' onclick="javascript: i++ % 2 == 0 ? barsy.stop() : barsy.restart();"></div>
     </div>
+
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="move.min.js" type="text/javascript"></script>
     <script src="barsy.jquery.js" type="text/javascript"></script>
     <script>
-        $('.barsy').barsy({
+        var barsy = $('.barsy').barsy({
             value: '123456a',
             speed: 700,
             distance: .3,
             height: '200px',
             color: '#3399CC'
         });
+
+        var i = 0;
     </script>
 </body>
 </html>
